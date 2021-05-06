@@ -45,7 +45,7 @@ pipeline {
 	
 	post {
 		success {
-			archiveArtifacts artifacts: 'src/main/*.war', fingerprint: true
+			archiveArtifacts artifacts: 'src/**/*.war', fingerprint: true
 		}
 	}
 
