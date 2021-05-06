@@ -7,25 +7,28 @@ pipeline {
 	stages {
 		stage('Build'){			
 			steps {
-				echo "Building the application "
+				echo "Building the application ..."
+				bat "mvn clean"
 			}
 		}
 		
 		stage('Test') {
 			when {
 				expression {
-					params.execTest == false
+					params.execTest == true
 				}
 			}
 			steps {
-				echo "Testing the application"
+				echo "Testing the application ..."
+				bat "mvn test"
 			}
 		}
 		
 		stage('Deploy') {
 			steps {
-				echo "Deploying the application"
-				echo "This is the Version to deploy : ${params.VERSION}"				
+				echo "This is the Version to deploy : ${params.VERSION}"
+				echo "Compiling and deploy the application ..."
+				bat "mvn compile"
 			}
 			
 		}
