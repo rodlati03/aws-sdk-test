@@ -7,7 +7,7 @@ pipeline {
 	stages {
 		stage('Build'){			
 			steps {
-				echo "Building the application ..."
+				echo "Building the code ..."
 				bat "mvn clean"
 			}
 		}
@@ -19,18 +19,33 @@ pipeline {
 				}
 			}
 			steps {
-				echo "Testing the application ..."
+				echo "Testing the project ..."
 				bat "mvn test"
 			}
+		}
+		
+		stage('Compile') {
+			steps {
+				echo "Compiling the project ..."
+				bat "mvn compile"
+			}
+			
 		}
 		
 		stage('Deploy') {
 			steps {
 				echo "This is the Version to deploy : ${params.VERSION}"
-				echo "Compiling and deploy the application ..."
-				bat "mvn compile"
+				echo "Deploy the application ..."
+				bat "mvn package"
 			}
 			
+		}
+		
+	}
+	
+	post {
+		succes {
+			archiveArtifacts artifacts: 'build/libs/*.war', fingerprint: true
 		}
 	}
 
