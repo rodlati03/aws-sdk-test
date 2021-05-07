@@ -54,8 +54,10 @@ pipeline {
 		stage('Release to NEXUS Manager'){			
 			steps {
 				echo "********************** RELEASE package to server NEXUS ********************* "
-				def nexusLoadRelease = load "script_nexusArtifactUploader.groovy"
-				nexusLoadRelease.getLoadingArtifact()
+				script {
+					def nexusLoadRelease = load "script_nexusArtifactUploader.groovy"
+					nexusLoadRelease.getLoadingArtifact()
+				}
 			}
 			
 		}
