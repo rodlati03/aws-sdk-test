@@ -1,16 +1,32 @@
+
 pipeline {
 	agent any
+	tools {
+		maven "Maven"
+	}
+	environment {
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "192.168.1.129:8081"
+        NEXUS_REPOSITORY = "maven-releases"
+        NEXUS_CREDENTIAL_ID = "my_nexus_credential"
+    }
 	parameters {
 		choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: 'Version to deploy on PROD')
 		booleanParam(name: 'execTest', defaultValue: true, description: '')
 	}
 	stages {
-		stage('Build'){			
+	
+		stage('Compile') {
 			steps {
-				echo "Building the code ..."
+				echo "**************** Clean the project before ************** "
 				bat "mvn clean"
+				echo "Compiling the project ..."
+				bat "mvn compile"
 			}
+			
 		}
+
 		/*
 		stage('Test') {
 			when {
@@ -24,19 +40,22 @@ pipeline {
 			}
 		}
 		*/
-		stage('Compile') {
+		
+		stage('Build'){			
 			steps {
-				echo "Compiling the project ..."
-				bat "mvn compile"
+				echo "Building the code ..."					
+				echo "This is the Version to deploy : ${params.VERSION}"
+				echo "Deploy the application ..."
+				bat "mvn package"
 			}
 			
 		}
 		
-		stage('Release and Deploy') {
-			steps {							
-				echo "This is the Version to deploy : ${params.VERSION}"
-				echo "Deploy the application ..."
-				bat "mvn package"
+		stage('Release to NEXUS Manager'){			
+			steps {
+				echo "********************** RELEASE package to server NEXUS ********************* "
+				def nexusLoadRelease = load "script_nexusArtifactUploader.groovy"
+				nexusLoadRelease.getLoadingArtifact()
 			}
 			
 		}
@@ -47,9 +66,6 @@ pipeline {
 		success {
 			echo "------------- COPY PACKAGE ARTIFCATS ---------------"
 			archiveArtifacts artifacts: '**/*_$BUILD_NUMBER.war', fingerprint: true
-			echo ""
-			echo "********************** RELEASE package to server NEXUS ********************* "
-			bat 'curl -v -u admin:Sophtan@2018 --upload-file $FILE http://192.168.1.129:8081/repository/maven-releases/$MYREPO/$FILE'
 		}
 	}
 
