@@ -1,9 +1,9 @@
 def getLoadingArtifact() {
 	nexusArtifactUploader {
-        nexusVersion('nexus3')
+        nexusVersion('nexus2')
         protocol('http')
         nexusUrl('192.168.1.129:8081')
-        groupId('com.jojo.tuto')
+        groupId('fr.jojo.tuto')
         version('1.4')
         repository('maven-releases')
         credentialsId('my_nexus_credential')

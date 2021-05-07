@@ -1,4 +1,4 @@
-
+def nexusLoadRelease
 pipeline {
 	agent any
 	tools {
@@ -55,7 +55,7 @@ pipeline {
 			steps {
 				echo "********************** RELEASE package to server NEXUS ********************* "
 				script {
-					def nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
+					nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
 					nexusLoadRelease.getLoadingArtifact()
 				}
 			}
