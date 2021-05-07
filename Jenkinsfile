@@ -33,12 +33,10 @@ pipeline {
 		}
 		
 		stage('Deploy') {
-			steps {				
-				bat "mvn package"
-			}
-			steps {				
+			steps {							
 				echo "This is the Version to deploy : ${params.VERSION}"
 				echo "Deploy the application ..."
+				bat "mvn package"
 			}
 			
 		}
