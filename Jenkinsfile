@@ -55,7 +55,7 @@ pipeline {
 			steps {
 				echo "********************** RELEASE package to server NEXUS ********************* "
 				script {
-					def nexusLoadRelease = load "script_nexusArtifactUploader.groovy"
+					def nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
 					nexusLoadRelease.getLoadingArtifact()
 				}
 			}
