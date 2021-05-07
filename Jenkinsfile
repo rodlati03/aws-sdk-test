@@ -11,7 +11,7 @@ pipeline {
 				bat "mvn clean"
 			}
 		}
-		
+		/*
 		stage('Test') {
 			when {
 				expression {
@@ -23,7 +23,7 @@ pipeline {
 				bat "mvn test"
 			}
 		}
-		
+		*/
 		stage('Compile') {
 			steps {
 				echo "Compiling the project ..."
@@ -32,7 +32,7 @@ pipeline {
 			
 		}
 		
-		stage('Deploy') {
+		stage('Release and Deploy') {
 			steps {							
 				echo "This is the Version to deploy : ${params.VERSION}"
 				echo "Deploy the application ..."
@@ -45,7 +45,11 @@ pipeline {
 	
 	post {
 		success {
-			archiveArtifacts artifacts: '**/*.war', fingerprint: true
+			echo "------------- COPY PACKAGE ARTIFCATS ---------------"
+			archiveArtifacts artifacts: '**/*_$BUILD_NUMBER.war', fingerprint: true
+			echo ""
+			echo "********************** RELEASE package to server NEXUS ********************* "
+			bat 'curl -v -u admin:Sophtan@2018 --upload-file $FILE http://192.168.1.129:8081/repository/maven-releases/$MYREPO/$FILE'
 		}
 	}
 
