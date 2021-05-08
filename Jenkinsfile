@@ -8,7 +8,7 @@ pipeline {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "192.168.1.129:8081"
-        NEXUS_REPOSITORY = "maven-releases"
+        NEXUS_REPOSITORY = "maven-releases/"
         NEXUS_CREDENTIAL_ID = "my_nexus_credential"
     }
 	parameters {
@@ -22,7 +22,7 @@ pipeline {
 				echo "**************** Clean the project before ************** "
 				bat "mvn clean"
 				echo "Compiling the project ..."
-				bat "mvn compile"
+			//	bat "mvn compile"
 			}
 			
 		}
@@ -51,9 +51,9 @@ pipeline {
 			
 		}
 		
-		stage('Init'){			
+		stage('Load Groovy script'){			
 			steps {
-				script {
+				script{
 					nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
 				}
 			}
@@ -62,7 +62,7 @@ pipeline {
 		
 		stage('Release to NEXUS Manager'){			
 			steps {
-				//echo "********************** RELEASE package to server NEXUS ********************* "
+			    
 				script {
 					nexusLoadRelease.getLoadingArtifact()
 				}
@@ -75,7 +75,7 @@ pipeline {
 	post {
 		success {
 			echo "------------- COPY PACKAGE ARTIFCATS ---------------"
-			archiveArtifacts artifacts: '**/*_$BUILD_NUMBER.war', fingerprint: true
+			archiveArtifacts artifacts: '**/target/aws-sdk-test.war', fingerprint: true
 		}
 	}
 
