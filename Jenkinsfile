@@ -46,16 +46,24 @@ pipeline {
 				echo "Building the code ..."					
 				echo "This is the Version to deploy : ${params.VERSION}"
 				echo "Deploy the application ..."
-				bat "mvn package"
+				bat "mvn package -DskipTests=true"
+			}
+			
+		}
+		
+		stage('Init'){			
+			steps {
+				script {
+					nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
+				}
 			}
 			
 		}
 		
 		stage('Release to NEXUS Manager'){			
 			steps {
-				echo "********************** RELEASE package to server NEXUS ********************* "
+				//echo "********************** RELEASE package to server NEXUS ********************* "
 				script {
-					nexusLoadRelease = load "nexusArtifactLoaderScript.groovy"
 					nexusLoadRelease.getLoadingArtifact()
 				}
 			}

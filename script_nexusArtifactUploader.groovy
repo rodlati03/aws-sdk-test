@@ -28,7 +28,7 @@ def getLoadingArtifact() {
 			} else {
 				error "*** File: ${artifactPath}, could not be found";
 			}
-		}
+	}
 
 
 return this
